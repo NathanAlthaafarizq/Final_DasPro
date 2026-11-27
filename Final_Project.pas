@@ -1,86 +1,79 @@
------------- Nathan Althaafa Rizq - 261401103 ------------
+// ------------ Nathan Althaafa Rizq - 261401103 ------------
 Program SmartAudit;
 uses crt;
 
 type
-  transaksi = record
-  no, hari, kategori : longint;
-  masuk, keinginan : boolean;
-  nominal : longint;
-  keterangan : string[30];
-  kunci_lama, kunci_baru : longint;
-end;
-
-  data = record
-  nama : string[30];
-  tanggal, bulan, tahun : longint;
-  anggaran : array[1..7] of longint;
-  namaTarget : string[30];
-  Target : longint;
-  persen_butuh, persen_tabung, persen_darurat : longint;
-end;
+    data = record
+    nama : string[30];
+    tanggal, bulan, tahun : longint;
+    saldo_awal : longint;
+  end;
 
 Procedure Garis;
 var
   k : integer;
-
 begin
-  for k := 1 to 30 do 
-  write('=');
+  for k := 1 to 30 do
+    write('=');
   writeln;
 end;
 
-Function typeStr(n : longint): string;
+Function BacaAngka(pesan : string; minimal, maksimal : longint) : longint;
 var
-  i : string;
-
-begin
-  str(n, i);
-  typeStr := i;
-end;
-
-Function Persen(bagian, total : longint): longint;
-begin
-  if total <= 0 then Persen := 0
-  else
-    Persen := Round(bagian / total * 100);
-end;
-
-Function BacaBoolean(pesan : string) : boolean;
-var
-  i : string;
+  teks : string;
+  angka : longint;
+  kode : integer;
+  valid : boolean;
 begin
   repeat
-  write(pesan, '(y/t): ');
-  readln(i);
-  until (i = 'y') or (i = 'Y') or (i = 't') or (i = 'T');
-  BacaBoolean := (i = 'y') or (i := 'Y');
+    write(pesan);
+    readln(teks);
+    val(teks, angka, kode);
+    valid := (kode = 0) and (angka >= minimal) and (angka <= maksimal);
+    if not valid then
+      writeln('Input tidak valid. Isi angka ', minimal, ' sampai ', maksimal, '.');
+  until valid;
+  BacaAngka := angka;
 end;
+// Lanjutkan Kodenya Disini
 
-Function Kategori(i : longint): string;
+// ------------ Nathan Althaafa Rizq - 261401103 ------------
+Procedure SetupAwal(var P : data);
 begin
-  case i of
-    0 : Kategori := 'Pemasukan';
-    1 : Kategori := 'Makanan';
-    2 : Kategori := 'Transportasi';
-    3 : Kategori := 'Pendidikan';
-    4 : Kategori := 'Hiburan';
-    5 : Kategori := 'Tagihan';
-    6 : Kategori := 'Tabungan';
-    7 : Kategori := 'Lainnya';
+  clrscr;
+  Garis;
+  writeln('Setup Awal SmartAudit');
+  Garis;
+  with P do
+  begin
+  repeat
+    write('Nama            : ');
+    readln(P.nama);
+  until length(P.nama) > 0;
+  tanggal    := BacaAngka('Tanggal mulai   : ', 1, 31);
+  bulan      := BacaAngka('Bulan mulai     : ', 1, 12);
+  tahun      := BacaAngka('Tahun mulai     : ', 2000, 2100);
+  saldo_awal := BacaAngka('Saldo awal (Rp) : ', 0, 1000000000);
   end;
 end;
-----------------------------------------------------------
-// Lanjut Disini.. kalau diatas kurang nanti buat aja, lalu di samping buat nama dan nim dengan format yang sama di awal dan batas akhir line
 
------------- Nathan Althaafa Rizq - 261401103 ------------
-var 
-  D : Data;
-  T : array[1..100] of transaksi;
-  jumlah_transaksi : longint;
-  Pilih : longint;
-----------------------------------------------------------
+var
+  D : data;
 
 begin
-clrscr;
-// Penuhi yang kosong disini
+  SetupAwal(D);
+  writeln;
+  Garis;
+  writeln('Setup awal selesai');
+  Garis;
+  with D do
+  begin
+    writeln('Nama       : ', nama);
+    writeln('Mulai      : ', tanggal, '/', bulan, '/', tahun);
+    writeln('Saldo awal : Rp ', saldo_awal);
+    Garis;
+  end;
+  writeln('Tekan Enter untuk keluar...');
+  readln;
+end.
+// Lanjutkan kode globalnya disini
