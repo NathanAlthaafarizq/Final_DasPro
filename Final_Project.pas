@@ -248,6 +248,26 @@ begin
   Garis;
 end;
 
+procedure LoopPeriode30Hari(var P : data; var T : daftar; var n : longint; var kunciTrx : arrayKunci);  // Maria Cinta Murni Zai - 261401090
+var
+  selesai30 : boolean;
+begin
+  repeat
+    CatatTransaksi(T, n);
+    KunciDanPeringatan(P, T, n, kunciTrx);
+    selesai30 := Cek30HariSelesai(T, n);
+
+    if not selesai30 then
+    begin
+      writeln('>> Status 30 hari : BELUM SELESAI, lanjut ke pencatatan berikutnya.');
+      if (n >= 100) or not BacaBoolean('Lanjut catat transaksi lagi') then
+        selesai30 := true;
+    end
+    else
+      writeln('>> Status 30 hari : SUDAH SELESAI.');
+  until selesai30;
+end;
+
 var
   D : data;
   T : daftar;
@@ -262,8 +282,7 @@ begin
 
   clrscr;                       // Nathan Althaafa Rizq - 261401103
   repeat
-    CatatTransaksi(T, jumlah_transaksi);
-    KunciDanPeringatan(D, T, jumlah_transaksi, kunciRantai);  // Maria Cinta Murni Zai - 261401090
+    LoopPeriode30Hari(D, T, jumlah_transaksi, kunciRantai);   // Maria Cinta Murni Zai - 261401090
   until (jumlah_transaksi >= 100) or not BacaBoolean('Catat transaksi lagi?');
 
   writeln;                      // Nathan Althaafa Rizq - 261401103
