@@ -206,7 +206,7 @@ begin
   adaHari30 := false;
   for i := 1 to n do
     if T[i].hari = 30 then adaHari30 := true;
-  Cek30HariSelesai := adaHari30 or (n >= 30);
+  Cek30HariSelesai := adaHari30;
 end;
 
 Procedure AuditDanRekonsiliasi(var P : data; var T : daftar; n : longint; var kunciTrx : arrayKunci);
@@ -281,9 +281,7 @@ begin
   PemasukanDanRencana(D);       // Tessa Monica Tinambunan - 261401079 
 
   clrscr;                       // Nathan Althaafa Rizq - 261401103
-  repeat
-    LoopPeriode30Hari(D, T, jumlah_transaksi, kunciRantai);   // Maria Cinta Murni Zai - 261401090
-  until (jumlah_transaksi >= 100) or not BacaBoolean('Catat transaksi lagi?');
+  LoopPeriode30Hari(D, T, jumlah_transaksi, kunciRantai);   // Maria Cinta Murni Zai - 261401090
 
   writeln;                      // Nathan Althaafa Rizq - 261401103
   Garis;
