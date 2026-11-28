@@ -11,6 +11,15 @@ type
     anggaran : array[1..4] of longint;
   end;
 
+transaksi = record                      // Nathan Althaafa Rizq - 261401103
+    hari, kategori : longint;
+    keinginan : boolean;
+    nominal : longint;
+    keterangan : string[30];
+  end;
+
+  daftar = array[1..100] of transaksi;
+
 Procedure Garis;                          // Nathan Althaafa Rizq - 261401103
 var
   k : integer;
@@ -100,14 +109,86 @@ begin
   Garis;
 end;
 
-// Lanjutkan kode globalnya disini
+Function BacaBoolean(pesan : string) : boolean;   // Nathan Althaafa Rizq - 261401103
+var
+  i : string;
+begin
+  repeat
+    write(pesan, ' (y/t): ');
+    readln(i);
+  until (i = 'y') or (i = 'Y') or (i = 't') or (i = 'T');
+  BacaBoolean := (i = 'y') or (i = 'Y');
+end;
+
+Function NamaKategori(i : longint) : string;     
+begin
+  case i of
+    1 : NamaKategori := 'Makan';
+    2 : NamaKategori := 'Transportasi';
+    3 : NamaKategori := 'Pendidikan';
+    4 : NamaKategori := 'Lainnya';
+  end;
+end;
+
+Procedure CatatTransaksi(var T : daftar; var n : longint);
+var
+  k : integer;
+begin
+  if n >= 100 then
+  begin
+    writeln('Data transaksi sudah penuh (maksimal 100).');
+    exit;
+  end;
+
+  n := n + 1;
+  Garis;
+  writeln('Catat Transaksi ke-', n);
+  Garis;
+
+  with T[n] do
+  begin
+    hari := BacaAngka('Hari ke (1-30)    : ', 1, 30);
+
+    writeln;
+    for k := 1 to 4 do
+      writeln(k, '. ', NamaKategori(k));
+    kategori := BacaAngka('Pilih kategori    : ', 1, 4);
+
+    nominal   := BacaAngka('Nominal (Rp)      : ', 1, 1000000000);
+    keinginan := BacaBoolean('Termasuk keinginan? (t = kebutuhan)');
+    write('Keterangan        : ');
+    readln(keterangan);
+  end;
+
+  writeln;
+  with T[n] do
+  begin
+    write('Tersimpan: hari ', hari, ', ', NamaKategori(kategori), ', Rp ', nominal, ', ');
+    if keinginan then
+      writeln('keinginan')
+    else
+      writeln('kebutuhan');
+  end;
+  writeln;
+end;
+
+// lanjutkan kodenya disini
 
 var
   D : data;
+  T : daftar;
+  jumlah_transaksi : longint;
+  i : longint;
 
 begin
+  jumlah_transaksi := 0;        // Nathan Althaafa Rizq - 261401103
   SetupAwal(D);                 // Nathan Althaafa Rizq - 261401103
   PemasukanDanRencana(D);       // Tessa Monica Tinambunan - 261401079 
+
+  clrscr;                       // Nathan Althaafa Rizq - 261401103
+  repeat
+    CatatTransaksi(T, jumlah_transaksi);
+  until (jumlah_transaksi >= 100) or not BacaBoolean('Catat transaksi lagi?');
 
   writeln;                      // Nathan Althaafa Rizq - 261401103
   Garis;
@@ -122,6 +203,13 @@ begin
     writeln('Target     : Rp ', target_tabungan);
     Garis;
   end;
+
+  writeln('Daftar transaksi');
+  Garis;
+  for i := 1 to jumlah_transaksi do
+    writeln(i, '. Hari ', T[i].hari, ' | ', NamaKategori(T[i].kategori), ' | Rp ', T[i].nominal);
+  Garis;
+
   writeln('Tekan Enter untuk keluar...');
   readln;
 end.
