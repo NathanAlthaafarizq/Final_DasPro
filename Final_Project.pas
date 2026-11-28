@@ -58,7 +58,6 @@ begin
 end;
 
 Procedure PemasukanDanRencana(var P : data);    // Tessa Monica Tinambunan - 261401079 
-    target_tabungan : longint;
 var
   i : integer;
   totalAnggaran : longint;
